@@ -1,0 +1,19 @@
+{% extends 'general/base.html' %}
+
+{% load static %}
+
+{% block body %}
+
+<body>
+
+  <div class="container home_msg">
+      <form enctype="multipart/form-data" method="post" role="product_page">
+      {% csrf_token %}
+        <h2>Hi Meti! To pay, click on this button <button type="submit" class="btn btn-success" href="{% url 'product_page' %}" data-bind-href="pricing">Make payment</button></h2>
+      </form>
+   
+  </div>
+
+</body>
+
+{% endblock %} 
