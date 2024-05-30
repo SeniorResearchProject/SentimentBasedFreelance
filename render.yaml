@@ -3,7 +3,8 @@ services:
     name: freelancerservice
     env: python
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: python manage.py runserver 0.0.0.0:8002 --settings=backend.freelancerservice.settings
+    startCommand: python backend/freelancerservice/manage.py runserver 0.0.0.0:8002 --settings=backend.freelancerservice.settings
+
 
     envVars:
       - key: DJANGO_SECRET_KEY
