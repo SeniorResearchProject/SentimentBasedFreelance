@@ -4,3 +4,6 @@ pyyaml
 requests
 django-cors-headers
 gunicorn
+mysqlclient
+sqlparse
+urllib3
