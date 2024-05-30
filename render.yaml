@@ -3,7 +3,8 @@ services:
     name: freelancerservice
     env: python
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: gunicorn backend.freelancerservice.freelancerservice.wsgi:application --bind 0.0.0.0:8001
+    startCommand: python manage.py runserver 0.0.0.0:8002 --settings=backend.freelancerservice.freelancerservice.settings
+
     envVars:
       - key: DJANGO_SECRET_KEY
         value:django-insecure-3__l4^5-r4!j2r6lg*hfb5ibv2t=u(6=eujth)8341a7j^p(6(
