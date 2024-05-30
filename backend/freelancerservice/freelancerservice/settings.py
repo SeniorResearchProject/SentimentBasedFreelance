@@ -77,10 +77,10 @@ WSGI_APPLICATION = "freelancerservice.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'freelancerdb',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'NAME': 'btncul9uui1rp5udpgps',
+        'USER': 'u9snmcdzbaql5knw',
+        'PASSWORD': 'hfISfFCwqfHJSrNQEsKD',
+        'HOST': 'btncul9uui1rp5udpgps-mysql.services.clever-cloud.com',  # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
