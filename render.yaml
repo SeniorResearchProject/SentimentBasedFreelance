@@ -24,10 +24,10 @@ services:
     autoDeploy: true
 
   - type: web
-    name: usermanagement-service
+    name: UserManagement
     env: python
     buildCommand: pip install -r backend/requirements.txt
-    startCommand: gunicorn backend.UserManagement.wsgi:application --bind 0.0.0.0:8000
+    startCommand: gunicorn backend.UserManagement.server1.wsgi:application --bind 0.0.0.0:8000
     envVars:
       - key: DJANGO_SECRET_KEY
         value: django-insecure--=o))g*)tsqaoa3f!mo4q7-$0nmk6xj2@jv@)@we1z_&-=!boh
