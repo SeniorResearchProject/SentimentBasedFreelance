@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: freelancerservice
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.freelancerservice.wsgi:application --bind 0.0.0.0:8001
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value:django-insecure-3__l4^5-r4!j2r6lg*hfb5ibv2t=u(6=eujth)8341a7j^p(6(
+      - key: DATABASE_URL
+        value: your_database_url_here
+    autoDeploy: true
+
+  - type: web
+    name: employer-service
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.employer.wsgi:application --bind 0.0.0.0:8002
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value:django-insecure-x)p1j3s04g(_ft^^whf#_)nh7z27(95(@)hu%p_gt+u*v^pnb(
+      - key: DATABASE_URL
+        value: your_database_url_here
+    autoDeploy: true
+
+  - type: web
+    name: usermanagement-service
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.UserManagement.wsgi:application --bind 0.0.0.0:8000
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value: django-insecure--=o))g*)tsqaoa3f!mo4q7-$0nmk6xj2@jv@)@we1z_&-=!boh
+      - key: DATABASE_URL
+        value: your_database_url_here
+    autoDeploy: true
+
+  - type: web
+    name: payment-service
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend.payment.wsgi:application --bind 0.0.0.0:8003
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        value: your_secret_key_here
+      - key: DATABASE_URL
+        value: your_database_url_here
+    autoDeploy: true
