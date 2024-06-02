@@ -26,6 +26,10 @@ SECRET_KEY = "django-insecure-qr2=0+z+kas&=8-%0q_@clz*7nn@5fgo1a=4+$9+ztglqdncva
 DEBUG = True
 
 ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'sentimentbasedfreelance-backend-3.onrender.com',
+    'your_other_domains_or_ips_if_any',
+]
 
 
 # Application definition
