@@ -10,3 +10,4 @@ urllib3
 djangorestframework-simplejwt
 joblib
 scikit-learn
+imbalanced-learn
