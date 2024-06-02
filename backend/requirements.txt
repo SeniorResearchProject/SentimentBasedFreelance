@@ -7,3 +7,4 @@ gunicorn
 mysqlclient
 sqlparse
 urllib3
+djangorestframework-simplejwt
