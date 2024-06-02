@@ -84,6 +84,10 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+ALLOWED_HOSTS = [
+    'sentimentbasedfreelance-backend.onrender.com',
+    'your_other_domains_or_ips_if_any',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
