@@ -78,10 +78,10 @@ WSGI_APPLICATION = "SentimentService.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sentimentdb',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'NAME': 'bmq0ooffi0uzs86dc2d3',
+        'USER': 'u0hwxoynucg8dgqk',
+        'PASSWORD': 'Crtbq0lrFzdLsjuLFviW',
+        'HOST': 'bmq0ooffi0uzs86dc2d3-mysql.services.clever-cloud.com',  # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
