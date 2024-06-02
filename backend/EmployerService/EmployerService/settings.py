@@ -113,10 +113,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'myjob',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  # Or an IP Address that your DB is hosted on
+        'NAME': 'bzftclszh64uarottyed',
+        'USER': 'up1uwkdbm2bhbsmh',
+        'PASSWORD': 'up1uwkdbm2bhbsmh',
+        'HOST': 'bzftclszh64uarottyed-mysql.services.clever-cloud.com',  # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 }
@@ -127,6 +127,10 @@ REST_FRAMEWORK = {
     ),
 }
 USER_MANAGEMENT_URL = 'http://localhost:8000'
+ALLOWED_HOSTS = [
+    'sentimentbasedfreelance-backend-2.onrender.com',
+    'your_other_domains_or_ips_if_any',
+]
 
 
 CHANNEL_LAYERS = {
