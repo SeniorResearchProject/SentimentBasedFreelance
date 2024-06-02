@@ -8,3 +8,4 @@ mysqlclient
 sqlparse
 urllib3
 djangorestframework-simplejwt
+joblib
