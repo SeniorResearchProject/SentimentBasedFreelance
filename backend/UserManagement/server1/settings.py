@@ -34,7 +34,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS = [
-    'sentimentbasedfreelance-backend-3.onrender.com',
+    'usermanagement-qtjm.onrender.com',
     'your_other_domains_or_ips_if_any',
 ]
 
