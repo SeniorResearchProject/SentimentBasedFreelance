@@ -12,3 +12,4 @@ joblib
 scikit-learn
 imbalanced-learn
 xgboost
+python-dotenv
