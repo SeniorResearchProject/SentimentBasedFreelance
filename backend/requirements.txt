@@ -15,3 +15,5 @@ xgboost
 python-dotenv
 drf-yasg
 stripe
+google-auth
+google-auth-oauthlib
