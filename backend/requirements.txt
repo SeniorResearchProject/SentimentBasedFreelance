@@ -17,3 +17,4 @@ drf-yasg
 stripe
 google-auth
 google-auth-oauthlib
+facebook-sdk
