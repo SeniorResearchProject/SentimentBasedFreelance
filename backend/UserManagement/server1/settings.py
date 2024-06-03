@@ -33,7 +33,10 @@ JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY', 'django-insecure--=o))g*)tsqao
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    'sentimentbasedfreelance-backend-3.onrender.com',
+    'your_other_domains_or_ips_if_any',
+]
 
 # Application definition
 
@@ -90,10 +93,10 @@ WSGI_APPLICATION = 'server1.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'users_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
+        'NAME': 'blrnwyzda4uayq4pqwme',
+        'USER': 'uzjoeb37cweaur3d',
+        'PASSWORD': 'W0PqxyQnXQteTHz1aviy',
+        'HOST': 'blrnwyzda4uayq4pqwme-mysql.services.clever-cloud.com',
         'PORT': '3306',
     }
 }
