@@ -61,6 +61,7 @@ class RegisterView(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class VerifyEmail(generics.GenericAPIView):
+    permission_classes = (AllowAny,)
     def get(self, request):
         token = request.GET.get('token')  # Extract token from request URL
         if not token:
@@ -88,7 +89,6 @@ class VerifyEmail(generics.GenericAPIView):
 class LoginView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
 
-    
     @swagger_auto_schema(
         operation_description="Login endpoint",
         request_body=LoginSerializer,
@@ -102,11 +102,11 @@ class LoginView(generics.GenericAPIView):
         try:
             user = User.objects.get(email=user_data['email'])
             if not user.is_active:
-                return AuthenticationFailed('Account disabled, contact admin')
+                raise AuthenticationFailed('Account disabled, contact admin')
             if not user.is_verified:
-                return AuthenticationFailed('Email is not verified')
+                raise AuthenticationFailed('Email is not verified')
         except User.DoesNotExist:
-            return AuthenticationFailed('User not found!')
+            raise AuthenticationFailed('User not found!')
 
         # Generate tokens using django-rest-framework-simplejwt
         refresh = RefreshToken.for_user(user)
@@ -116,6 +116,8 @@ class LoginView(generics.GenericAPIView):
             role = 'employee'
         elif user.is_employer:
             role = 'employer'
+        elif user.is_staff:
+            role = 'admin'
 
         response = Response({
             'refresh': str(refresh),
@@ -132,9 +134,8 @@ class LoginView(generics.GenericAPIView):
         return response
 
 
-
 class LogoutView(APIView):
-    # permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated] 
     def post(self, request):
         response = Response()
         response.delete_cookie('access_token')
@@ -144,12 +145,11 @@ class LogoutView(APIView):
         }
         return response
     
-class HomeView(APIView):
-    def home(request):
-        return render(request, 'accounts/home.html')
+
 
   
 class AllUsersView(APIView):
+    permission_classes = (IsAdminUser,)
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
@@ -191,6 +191,7 @@ class DeleteUserView(APIView):
 
 
 class RequestPasswordResetEmail(generics.GenericAPIView):
+    permission_classes = (AllowAny,)
     serializer_class=ResetPasswordSerializer
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -211,6 +212,7 @@ class RequestPasswordResetEmail(generics.GenericAPIView):
 
 
 class PasswordTokenCheckAPI(generics.GenericAPIView):
+    permission_classes = (AllowAny,)
     def get(self, request, uidb64, token):
         try:
             id = smart_str(urlsafe_base64_decode(uidb64))
@@ -246,33 +248,8 @@ class ValidateTokenView(APIView):
         return Response({
             'user_id': user.id,
             'username': user.username,
+            'name': user.name,
+            'email' : user.email,
         })
 
-    # def get(self, request):
-    #     token = request.COOKIES.get('access_token')
-
-    #     if not token:
-    #             raise AuthenticationFailed('Unauthenticated!')
-
-    #     try:
-    #         access_token = AccessToken(token)
-    #         user_id = access_token['user_id']
-            
-    #     except Exception:
-    #         raise AuthenticationFailed('Unauthenticated!')
-
-    #     try:
-    #         user = User.objects.get(id=user_id)
-            
-    #     except User.DoesNotExist:
-    #         raise AuthenticationFailed('User not found!')
-
-    #     serializer = UserSerializer(user)
-
-    #     return Response(serializer.data, status=200)
-
-
     
-
-
-

@@ -10,4 +10,21 @@ class CommentSerializer(serializers.Serializer):
 class SentimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Analysis
-        fields = ['sentiment']
+        fields = ['sentiment_score']
+
+class FreelancerSerializer(serializers.Serializer):
+    class Meta:
+        model = Analysis
+        fields = ['task', 'comment']
+
+class FreelancerRating(serializers.Serializer):
+     class Meta:
+        model = Analysis
+        fields = ['rate']
+
+class AllSentimentSerializer(serializers.Serializer):
+     class Meta:
+        model = Analysis
+        fields = '__all__'
+
+

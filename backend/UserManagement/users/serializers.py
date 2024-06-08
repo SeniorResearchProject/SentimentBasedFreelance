@@ -58,39 +58,10 @@ class LoginSerializer(serializers.ModelSerializer):
         model= User
         fields = ['email', 'password', 'username', 'tokens', 'role']
 
+    
 
-    # def validate(self, data):
-    #     email = data.get('email', '')
-    #     password = data.get('password', '')
-    #     filtered_user_by_email = User.objects.filter(email=email)
 
-    #     user = auth.authenticate(email=email, password=password)
-
-    #     if filtered_user_by_email.exists() and filtered_user_by_email[0].auth_provider != 'email':
-    #         raise AuthenticationFailed(
-    #             detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
-
-    #     if not user:
-    #         raise AuthenticationFailed('Invalid credentials, try again')
-    #     if not user.is_active:
-    #         raise AuthenticationFailed('Account disabled, contact admin')
-    #     if not user.is_verified:
-    #         raise AuthenticationFailed('Email is not verified')
-        
-        
-    #     if user.is_employee:
-    #         role = 'employee'
-    #     elif user.is_employer:
-    #         role = 'employer'
-        
-        # return {
-        #     'email': user.email,
-        #     'username': user.username,
-        #     'tokens':user.tokens,
-        #     'role': role
-        # }
-
-        # return super().validate(data)
+   
 
 
         

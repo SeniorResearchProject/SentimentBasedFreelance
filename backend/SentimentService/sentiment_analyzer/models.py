@@ -1,6 +1,8 @@
 from django.db import models
 
 class Analysis(models.Model):
+    employer = models.IntegerField()
+    task =  models.IntegerField(default=2)
     comment = models.TextField()
     sentiment = models.CharField(max_length=255, blank=True, null=True)
     freelancer_id = models.IntegerField()  # Assuming freelancer IDs are integers

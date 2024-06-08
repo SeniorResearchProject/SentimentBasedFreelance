@@ -1,15 +1,14 @@
 from django.db import models
-# from app_users.models import AppUser
-from django.dispatch import receiver
-from django.db.models.signals import post_save
 
-class UserPayment(models.Model):
-	# app_user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
-	payment_bool = models.BooleanField(default=False)
-	stripe_checkout_id = models.CharField(max_length=500)
+class Transaction(models.Model):
+    first_name = models.CharField(max_length=255)  
+    last_name = models.CharField(max_length=255)
+    freelancer = models.IntegerField(default=1, null=True, blank=True)
+    employer = models.IntegerField(null=True, blank=True)
+    email = models.EmailField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    tx_ref = models.CharField(max_length=255)
+    status = models.CharField(max_length=20, choices=[('created', 'Created'), ('completed', 'Completed')], default='created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    
 
-
-# @receiver(post_save, sender=AppUser)
-def create_user_payment(sender, instance, created, **kwargs):
-	if created:
-		UserPayment.objects.create(app_user=instance)

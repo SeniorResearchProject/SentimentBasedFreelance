@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,13 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'stripe',
     'payment'
+    # 'stripe',
+    # 'payment'
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -58,7 +62,7 @@ ROOT_URLCONF = 'server5.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +75,9 @@ TEMPLATES = [
     },
 ]
 
+
+
+
 WSGI_APPLICATION = 'server5.wsgi.application'
 
 
@@ -79,11 +86,28 @@ WSGI_APPLICATION = 'server5.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'freelance_payment',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '4306',
     }
 }
 
+REST_FRAMEWORK={
+    'NON_FIELD_ERRORS_KEY': 'error'
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -124,7 +148,22 @@ STATIC_URL = 'static/'
 STRIPE_PUBLIC_KEY = 'pk_test_51P9pg2LCYw4uR7bJyugyAPZlfdOEWRpv6h0DYneGbGuw96VprlwBfE96sBeLWCTu952pVWQCDNALF9GSDB9YKa5q00kcUmv0ET'
 STRIPE_SECRET_KEY = 'sk_test_51P9pg2LCYw4uR7bJcHvjiZvKzaYP5DS9bzlnCnPmzJK8kXRyzpEjRycTHJdoOzdy3zH3jSc8Gdsq1q3T408w2Nbe00v7DYHzYW'
 
+USER_MANAGEMENT_URL = 'http://localhost:8000'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+AUTHENTICATION_BACKENDS = [
+    # 'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',  # default
+    'users.backends.EmailBackend',  # path to your EmailBackend class
+]
+
+#chapa
+CHAPAPI_SECRET_KEY= 'CHASECK_TEST-32Cwztibxuk2GEm8lU6cQxWaitxmv9T4'
+USER_MANAGEMENT_URL = 'http://localhost:8000'
