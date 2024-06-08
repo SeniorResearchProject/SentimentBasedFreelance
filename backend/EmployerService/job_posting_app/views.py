@@ -32,7 +32,7 @@ from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Avg, Count
-from .models import Job, TaskSubmission
+
 class JobPostView(APIView):
     authentication_classes = [TokenAuthentication]
 

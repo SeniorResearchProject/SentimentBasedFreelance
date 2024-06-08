@@ -209,7 +209,12 @@ def SentimentAnalysisView(request):
 
             # Assuming the 'Positive' class is the last one in your model
             positive_probability = prediction_proba[0][-1]
-            class_label = 'Positive' if positive_probability >= 0.5 else 'Negative'
+            if positive_probability <= 0.02:
+                class_label = 'Negative'
+            elif 0.03 <= positive_probability <= 0.06:
+                class_label = 'Neutral'
+            else:
+                class_label = 'Positive'
             sentiment_score = positive_probability
             rate = int(sentiment_score * 10) + 1
 
@@ -330,7 +335,12 @@ def EnglishSentimentAnalysisView(request):
 
             # Assuming the 'Positive' class is the last one in your model
             positive_probability = prediction_proba[0][-1]
-            class_label = 'Positive' if positive_probability >= 0.5 else 'Negative'
+            if positive_probability <= 0.2:
+                class_label = 'Negative'
+            elif 0.3 <= positive_probability <= 0.6:
+                class_label = 'Neutral'
+            else:
+                class_label = 'Positive'
 
             sentiment_score = positive_probability
             rate = int(sentiment_score * 10) + 1

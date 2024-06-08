@@ -51,8 +51,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'users',
-    'social_auth',
-    'payment'
+    'social_auth'
 ]
 
 MIDDLEWARE = [

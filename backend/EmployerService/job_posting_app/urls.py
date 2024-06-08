@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import JobPostView,ViewFreelancers, JobStatisticsView,JobPostedTimeView,JobDetailView, JobListView, JobCountView, UniqueCompanyCountView, RecentJobCountView, JobCountByUserView, JobListByUserView# Make sure you're importing JobPostView correctly
+from .views import JobPostView,ViewFreelancers, JobStatisticsView,JobPostedTimeView, JobListView, JobCountView, UniqueCompanyCountView, RecentJobCountView, JobCountByUserView, JobListByUserView# Make sure you're importing JobPostView correctly
 from .views import ViewJob 
 # from .views import TaskSubmissionView
 # from .views import MilestoneProgressView
@@ -15,7 +15,7 @@ urlpatterns = [
      path('recent-job-count/', RecentJobCountView.as_view(), name='recent-job-count'),
      path('job-count-by-user/<int:posted_by_user_id>/', JobCountByUserView.as_view(), name='job-count-by-user'),
     path('job-list-by-user/', JobListByUserView.as_view(), name='job-list-by-user'),
-     path('jobs/<int:job_id>/', JobDetailView.as_view(), name='job-detail'),
+    # path('jobs/<int:job_id>/', JobDetailView.as_view(), name='job-detail'),
      path('api/job-statistics/', JobStatisticsView.as_view(), name='job-statistics'),
      path('api/job-posted-time/', JobPostedTimeView.as_view(), name='job-posted-time'),
 ]
