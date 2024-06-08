@@ -18,3 +18,4 @@ stripe
 google-auth
 google-auth-oauthlib
 facebook-sdk
+Pillow
