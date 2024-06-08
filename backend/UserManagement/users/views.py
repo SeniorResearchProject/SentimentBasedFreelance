@@ -37,21 +37,6 @@ logger = logging.getLogger(__name__)
 
 class RegisterView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
-     @swagger_auto_schema(
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email of the user'),
-                'username': openapi.Schema(type=openapi.TYPE_STRING, description='Username of the user'),
-                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Password of the user'),
-            },
-            required=['email', 'username', 'password']
-        ),
-        responses={
-            status.HTTP_201_CREATED: UserSerializer,
-            status.HTTP_400_BAD_REQUEST: "Invalid Request Body",
-        },
-    )
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
