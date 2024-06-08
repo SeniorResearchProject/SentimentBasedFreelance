@@ -87,14 +87,13 @@ WSGI_APPLICATION = 'server5.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'freelance_payment',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '4306',
+        'NAME': 'b8p8bsupntoiz6ttw2mb',
+        'USER': 'ulnik5a6gtgubimx',
+        'PASSWORD': 'D99VzFROkzw08HQdtsoF',
+        'HOST': 'b8p8bsupntoiz6ttw2mb-mysql.services.clever-cloud.com',  # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
     }
 }
-
 REST_FRAMEWORK={
     'NON_FIELD_ERRORS_KEY': 'error'
 }
@@ -127,7 +126,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+ALLOWED_HOSTS = [
+    'PaymentService.onrender.com',
+    'your_other_domains_or_ips_if_any',
+]
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
