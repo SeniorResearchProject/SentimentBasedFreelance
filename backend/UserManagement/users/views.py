@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 class RegisterView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
+    @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
