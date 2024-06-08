@@ -7,15 +7,15 @@
 # ]
 
 from django.urls import path
-from django.urls import path
-from .views import payment_initialize, payment_callback, get_csrf_token,RevenueView,TransactionsView,AverageValueView
+from . import views
+
 app_name = 'payment'
 
 urlpatterns = [
-    path('initialize/', payment_initialize, name='payment_initialize'),
-    path('callback/', payment_callback, name='payment_callback'),
-    path('get-csrf-token/', get_csrf_token, name='get_csrf_token'),
-    path('total-revenue/', views.RevenueView.as_view(), name='revene'),
-	path('transactions/', views.TransactionsView.as_view(), name='transactions'),
-	path('average-value/', views.AverageValueView.as_view(), name='average value'),
+    path('initialize/', views.payment_initialize, name='payment_initialize'),
+    path('callback/', views.payment_callback, name='payment_callback'),
+    path('get-csrf-token/', views.get_csrf_token, name='get_csrf_token'),
+    path('total-revenue/', views.RevenueView.as_view(), name='revenue'),
+    path('transactions/', views.TransactionsView.as_view(), name='transactions'),
+    path('average-value/', views.AverageValueView.as_view(), name='average_value'),
 ]
