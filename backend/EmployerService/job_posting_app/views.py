@@ -121,6 +121,41 @@ class ViewJob(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Job.DoesNotExist:
             return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
+class UpdateJobView(APIView):
+    permission_classes = (AllowAny,)
+
+    def put(self, request, id):
+        try:
+            job = Job.objects.get(id=id)
+        except Job.DoesNotExist:
+            return Response({"msg": "Job not found"}, status=404)
+
+        # Extract only the fields you want to update
+        update_data = {
+            key: value for key, value in request.data.items()
+            if key in ['title', 'description', 'location', 'salary', 'company_name']  # Add other fields if needed
+        }
+
+        serializer = JobSerializer(job, data=update_data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        else:
+            return Response(serializer.errors, status=400)
+
+
+class DeleteJobView(APIView):
+    permission_classes = (AllowAny,)
+
+    def delete(self, request, id):
+        try:
+            job = Job.objects.get(id=id)
+        except Job.DoesNotExist:
+            return Response({"msg": "Job not found"}, status=404)
+
+        job.delete()
+        return Response({'message': 'Job deleted successfully.'}, status=200)
+
 
     
 from django.core.mail import send_mail
