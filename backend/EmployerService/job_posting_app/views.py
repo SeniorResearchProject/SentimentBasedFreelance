@@ -32,7 +32,7 @@ from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Avg, Count
-
+from rest_framework.permissions import AllowAny
 class JobPostView(APIView):
     authentication_classes = [TokenAuthentication]
 
