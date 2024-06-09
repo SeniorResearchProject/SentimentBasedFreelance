@@ -73,7 +73,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "EmployerService.wsgi.application"
 
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r'^/ws/chat/'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
