@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
      "job_posting_app",
      'corsheaders',
+     'job_posting_app.middleware.CorsMiddleware',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
