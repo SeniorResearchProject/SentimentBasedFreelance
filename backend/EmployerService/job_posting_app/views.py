@@ -33,6 +33,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Avg, Count
 from rest_framework.permissions import AllowAny
+from django.http import HttpResponse
+
+def options_request_handler(request, *args, **kwargs):
+    response = HttpResponse()
+    response['Allow'] = 'GET, POST, OPTIONS, DELETE, PATCH, PUT'
+    response['Access-Control-Allow-Origin'] = 'http://localhost:3001'
+    response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, DELETE, PATCH, PUT'
+    response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 class JobPostView(APIView):
     authentication_classes = [TokenAuthentication]
 
