@@ -19,3 +19,6 @@ google-auth
 google-auth-oauthlib
 facebook-sdk
 Pillow
+channels
+channels-redis
+hypercorn
