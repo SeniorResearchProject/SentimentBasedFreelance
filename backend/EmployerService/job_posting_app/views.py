@@ -131,10 +131,10 @@ class ViewJob(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Job.DoesNotExist:
             return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
-@csrf_exempt
+
 class UpdateJobView(APIView):
     permission_classes = (AllowAny,)
-
+    @csrf_exempt
     def put(self, request, id):
         try:
             job = Job.objects.get(id=id)
@@ -154,10 +154,10 @@ class UpdateJobView(APIView):
         else:
             return Response(serializer.errors, status=400)
 
-@csrf_exempt
 class DeleteJobView(APIView):
     permission_classes = (AllowAny,)
-
+     
+    @csrf_exempt
     def delete(self, request, id):
         try:
             job = Job.objects.get(id=id)
