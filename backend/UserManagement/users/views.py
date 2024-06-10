@@ -35,43 +35,31 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-from django.contrib.auth.hashers import make_password
-
 class RegisterView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
-
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            name = serializer.validated_data.get('name')
-            username = serializer.validated_data.get('username')
-            email = serializer.validated_data.get('email')
-            password = serializer.validated_data.get('password')
+            serializer.save()
+            user_data= serializer.data
+            user=User.objects.get(email=  user_data['email'])
 
-            # Hash the password
-            hashed_password = make_password(password)
-
-            user = User.objects.create_user(name=name, username=username, email=email,
-                                            password=hashed_password)
-
-            # Email verification
             token = jwt.encode({'id': user.id}, 'secret', algorithm='HS256')
-            current_site = get_current_site(request)
-            relative_link = reverse('verify-email')
-            abs_url = 'http://' + current_site.domain + relative_link + "?token=" + str(token)
-            email_body = f'Hi {user.username},\n\nPlease click on the link below to verify your email:\n{abs_url}'
-            send_mail(
-                subject='Verify your email',
-                message=email_body,
-                from_email=None,
-                recipient_list=[user.email],
-                fail_silently=False,
-            )
 
-            return Response({'message': 'User registered successfully. Please check your email for verification.'},
-                            status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            current_site= get_current_site(request).domain
+            relativeLink= reverse('email-verify')
+            absurl='http://'+current_site+relativeLink+"?token="+str(token)
+            email_body = 'Hi '+user.username+' Use link below to verify your email \n'+ absurl
+            
+            data= {'email_body':email_body, 'email_subject': 'Verify your email', 'to_email':user.email}
+            
+            Util.send_email(data)
+
+            return Response( user_data,status=status.HTTP_201_CREATED)
+            # return redirect('login')
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
     
@@ -100,6 +88,9 @@ class VerifyEmail(generics.GenericAPIView):
         except jwt.exceptions.DecodeError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import authenticate
+
 class LoginView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
 
@@ -112,19 +103,16 @@ class LoginView(generics.GenericAPIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_data = serializer.validated_data
+        
+        # Authenticate user using email and password
+        user = authenticate(request, email=user_data['email'], password=user_data['password'])
+        if user is None:
+            raise AuthenticationFailed('Invalid email or password')
 
-        try:
-            user = User.objects.get(email=user_data['email'])
-            if not user.is_active:
-                raise AuthenticationFailed('Account disabled, contact admin')
-            if not user.is_verified:
-                raise AuthenticationFailed('Email is not verified')
-        except User.DoesNotExist:
-            raise AuthenticationFailed('User not found!')
-
-        # Compare the hashed passwords
-        if not user.check_password(user_data['password']):
-            raise AuthenticationFailed('Invalid credentials')
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+        if not user.is_verified:
+            raise AuthenticationFailed('Email is not verified')
 
         # Generate tokens using django-rest-framework-simplejwt
         refresh = RefreshToken.for_user(user)
@@ -150,6 +138,7 @@ class LoginView(generics.GenericAPIView):
         # Also include JWT in the response headers
         response['Authorization'] = f'Bearer {str(access_token)}'
         return response
+
 
 
 class LogoutView(APIView):
