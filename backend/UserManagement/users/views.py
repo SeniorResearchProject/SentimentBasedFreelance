@@ -35,30 +35,47 @@ logger = logging.getLogger(__name__)
 
 # Create your views here.
 
+from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
+from django.urls import reverse
+
 class RegisterView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            user_data= serializer.data
-            user=User.objects.get(email=  user_data['email'])
+            name = serializer.validated_data.get('name')
+            username = serializer.validated_data.get('username')
+            email = serializer.validated_data.get('email')
+            password = serializer.validated_data.get('password')
 
+            # Salting process
+            salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
+            password_hash = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+
+            user = User.objects.create_user(name=name, username=username, email=email,
+                                            password=password_hash.hex(), salt=salt.decode('ascii'))
+
+            # Email verification
             token = jwt.encode({'id': user.id}, 'secret', algorithm='HS256')
+            current_site = get_current_site(request)
+            relative_link = reverse('verify-email')
+            abs_url = 'http://' + current_site.domain + relative_link + "?token=" + str(token)
+            email_body = f'Hi {user.username},\n\nPlease click on the link below to verify your email:\n{abs_url}'
+            send_mail(
+                subject='Verify your email',
+                message=email_body,
+                from_email=None,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
 
-            current_site= get_current_site(request).domain
-            relativeLink= reverse('email-verify')
-            absurl='http://'+current_site+relativeLink+"?token="+str(token)
-            email_body = 'Hi '+user.username+' Use link below to verify your email \n'+ absurl
-            
-            data= {'email_body':email_body, 'email_subject': 'Verify your email', 'to_email':user.email}
-            
-            Util.send_email(data)
+            return Response({'message': 'User registered successfully. Please check your email for verification.'},
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response( user_data,status=status.HTTP_201_CREATED)
-            # return redirect('login')
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class VerifyEmail(generics.GenericAPIView):
     permission_classes = (AllowAny,)
@@ -85,7 +102,6 @@ class VerifyEmail(generics.GenericAPIView):
         except jwt.exceptions.DecodeError:
             return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
 
-   
 class LoginView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
 
@@ -95,26 +111,27 @@ class LoginView(generics.GenericAPIView):
         responses={200: openapi.Response('JWT Token', LoginSerializer)}
     )
     def post(self, request):
-        email = request.data.get('email')
-        password = request.data.get('password')
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user_data = serializer.validated_data
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=user_data['email'])
+            if not user.is_active:
+                raise AuthenticationFailed('Account disabled, contact admin')
+            if not user.is_verified:
+                raise AuthenticationFailed('Email is not verified')
         except User.DoesNotExist:
             raise AuthenticationFailed('User not found!')
 
-        # Manually hash the provided password
-       hashed_password = hashlib.sha256((password).encode()).hexdigest()
+        # Manually hash the provided password using the stored salt
+        password = user_data['password']
+        salt = user.salt.encode('ascii')
+        hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000).hex()
 
         # Compare the hashed passwords
         if hashed_password != user.password:
             raise AuthenticationFailed('Invalid credentials')
-
-        if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
-
-        if not user.is_verified:
-            raise AuthenticationFailed('Email is not verified')
 
         # Generate tokens using django-rest-framework-simplejwt
         refresh = RefreshToken.for_user(user)
