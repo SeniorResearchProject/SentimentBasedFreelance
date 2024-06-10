@@ -104,7 +104,7 @@ class LoginView(generics.GenericAPIView):
             raise AuthenticationFailed('User not found!')
 
         # Manually hash the provided password
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+       hashed_password = hashlib.sha256((password).encode()).hexdigest()
 
         # Compare the hashed passwords
         if hashed_password != user.password:
