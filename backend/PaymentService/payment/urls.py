@@ -15,7 +15,8 @@ urlpatterns = [
     path('initialize/', views.payment_initialize, name='payment_initialize'),
     path('callback/', views.payment_callback, name='payment_callback'),
     path('get-csrf-token/', views.get_csrf_token, name='get_csrf_token'),
-    path('total-revenue/', views.RevenueView, name='revenue'),
-    path('transactions/', views.TransactionsView, name='transactions'),
-    path('average-value/', views.AverageValueView, name='average_value'),
+    path('total-revenue/', views.RevenueView.as_view(), name='revenue'),
+    path('transactions/', views.TransactionsView.as_view(), name='transactions'),
+    path('average-value/', views.AverageValueView.as_view(), name='average_value'),
+]
 ]
