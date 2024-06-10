@@ -6,6 +6,7 @@ from django.contrib.messages import constants as messages_constants
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+import os
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
 from django.urls import reverse
