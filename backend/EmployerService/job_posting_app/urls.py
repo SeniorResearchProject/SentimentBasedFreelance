@@ -3,7 +3,12 @@ from .views import JobPostView,ViewFreelancers,UpdateJobView, DeleteJobView,JobS
 from .views import ViewJob 
 # from .views import TaskSubmissionView
 # from .views import MilestoneProgressView
+from django.urls import re_path
+from .views import options_request_handler
+
+
 urlpatterns = [
+    re_path(r'^api/.*$', options_request_handler),
     path('job-post/', JobPostView.as_view(), name='job_post'),
     path('job-list/', JobListView.as_view(), name='job_list'),
     path('viewfreelancers/', ViewFreelancers.as_view(), name='view-freelancers'),
