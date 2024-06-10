@@ -95,18 +95,26 @@ class LoginView(generics.GenericAPIView):
         responses={200: openapi.Response('JWT Token', LoginSerializer)}
     )
     def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user_data = serializer.validated_data
-        
+        email = request.data.get('email')
+        password = request.data.get('password')
+
         try:
-            user = User.objects.get(email=user_data['email'])
-            if not user.is_active:
-                raise AuthenticationFailed('Account disabled, contact admin')
-            if not user.is_verified:
-                raise AuthenticationFailed('Email is not verified')
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise AuthenticationFailed('User not found!')
+
+        # Manually hash the provided password
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        # Compare the hashed passwords
+        if hashed_password != user.password:
+            raise AuthenticationFailed('Invalid credentials')
+
+        if not user.is_active:
+            raise AuthenticationFailed('Account disabled, contact admin')
+
+        if not user.is_verified:
+            raise AuthenticationFailed('Email is not verified')
 
         # Generate tokens using django-rest-framework-simplejwt
         refresh = RefreshToken.for_user(user)
