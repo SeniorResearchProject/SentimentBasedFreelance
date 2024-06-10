@@ -13,35 +13,33 @@ from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
-
     class Meta:
         model = User
-        fields = ['id', 'name', 'username', 'email', 'password', 'confirm_password', 'is_employee', 'is_employer']
-        extra_kwargs = {
-            'password': {'write_only': True}
+        fields = ['id', 'name', 'username','email', 'password', 'confirm_password', 'is_employee', 'is_employer']
+        extra_kwargs= {
+            'password': {'write_only': True }
         }
-
     def validate(self, data):
-        email = data.get('email', '')
-        username = data.get('username', '')
+        email= data.get('email', '')
+        username= data.get('username', '')
+        is_employee = data.get('is_employee', False)
+        is_employer = data.get('is_employer', False)
 
         if not username.isalnum():
             raise serializers.ValidationError('The username should only contain alphanumeric characters')
-        
         if data.get('password') != data.get('confirm_password'):
             raise serializers.ValidationError("The passwords do not match.")
-        
         return data
+    
 
     def create(self, validated_data):
         validated_data.pop('confirm_password')
         password = validated_data.pop('password', None)
-
-        instance = self.Meta.model(**validated_data)
-        
+      
+        # instance = self.Meta.model(**validated_data)
+        instance = User.objects.create_user(**validated_data)
         if password is not None:
             instance.set_password(password)
-        
         instance.save()
         return instance
 
