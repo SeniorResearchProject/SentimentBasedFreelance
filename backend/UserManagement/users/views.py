@@ -35,10 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 # Create your views here.
-
-from django.core.mail import send_mail
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
+from django.contrib.auth.hashers import make_password
 
 class RegisterView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
@@ -51,12 +48,11 @@ class RegisterView(generics.GenericAPIView):
             email = serializer.validated_data.get('email')
             password = serializer.validated_data.get('password')
 
-            # Salting process
-            salt = hashlib.sha256(os.urandom(60)).hexdigest().encode('ascii')
-            password_hash = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+            # Hash the password
+            hashed_password = make_password(password)
 
             user = User.objects.create_user(name=name, username=username, email=email,
-                                            password=password_hash.hex(), salt=salt.decode('ascii'))
+                                            password=hashed_password)
 
             # Email verification
             token = jwt.encode({'id': user.id}, 'secret', algorithm='HS256')
@@ -76,6 +72,7 @@ class RegisterView(generics.GenericAPIView):
                             status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     
 class VerifyEmail(generics.GenericAPIView):
@@ -125,13 +122,8 @@ class LoginView(generics.GenericAPIView):
         except User.DoesNotExist:
             raise AuthenticationFailed('User not found!')
 
-        # Manually hash the provided password using the stored salt
-        password = user_data['password']
-        salt = user.salt.encode('ascii')
-        hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000).hex()
-
         # Compare the hashed passwords
-        if hashed_password != user.password:
+        if not user.check_password(user_data['password']):
             raise AuthenticationFailed('Invalid credentials')
 
         # Generate tokens using django-rest-framework-simplejwt
